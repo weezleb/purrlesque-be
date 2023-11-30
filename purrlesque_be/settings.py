@@ -37,7 +37,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['purrlesque-be-production.up.railway.app', 'localhost', '127.0.0.1']
 
-purrlesque-be-production.up.railway.app
+
 # Application definition
 
 INSTALLED_APPS = [
