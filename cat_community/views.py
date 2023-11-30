@@ -38,9 +38,15 @@ def login_user(request):
         user = authenticate(username=username, password=password)
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
+            is_admin = user.is_superuser
+            return Response({
+                'token': token.key, 
+                'userId': user.id, 
+                'isAdmin': is_admin
+            })
         else:
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()

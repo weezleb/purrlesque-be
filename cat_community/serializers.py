@@ -9,11 +9,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class CatPhotoSerializer(serializers.ModelSerializer):
     upvotes = serializers.SerializerMethodField()
     downvotes = serializers.SerializerMethodField()
+    user_id = serializers.ReadOnlyField(source='user.id')
 
     class Meta:
         model = CatPhoto
-        fields = ['id', 'user', 'image_url', 'caption', 'uploaded_at', 'upvotes', 'downvotes']
-        read_only_fields = ['user', 'image_url', 'upvotes', 'downvotes']
+        fields = ['id', 'user', 'user_id', 'image_url', 'caption', 'uploaded_at', 'upvotes', 'downvotes']
+        read_only_fields = ['user', 'user_id', 'image_url', 'upvotes', 'downvotes']
 
     def get_upvotes(self, obj):
         return obj.vote_set.filter(vote_type='up').count()
