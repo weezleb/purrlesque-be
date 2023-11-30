@@ -25,15 +25,17 @@ class CatPhotoSerializer(serializers.ModelSerializer):
 
 
 class ThreadSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user.id')
+
     class Meta:
         model = Thread
-        fields = ['id', 'title', 'content', 'created_at', 'user']
+        fields = ['id', 'title', 'content', 'created_at', 'user', 'user_id']
         read_only_fields = ['user']
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'cat_photo', 'thread', 'user', 'content', 'created_at']
+        fields = ['id', 'cat_photo', 'thread', 'user', 'content', 'created_at', 'edited_history']
         read_only_fields = ['user']
 
 

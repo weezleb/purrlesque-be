@@ -136,17 +136,21 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         return queryset
     
-    def destroy(self, request, *args, **kwargs):
-        comment = self.get_object()
-        if request.user != comment.user and not request.user.is_superuser:
-            raise PermissionDenied("You do not have permission to delete this comment.")
-        return super(CommentViewSet, self).destroy(request, *args, **kwargs)
-    
     def update(self, request, *args, **kwargs):
         comment = self.get_object()
         if request.user != comment.user and not request.user.is_superuser:
             raise PermissionDenied("You do not have permission to edit this comment.")
-        return super(CommentViewSet, self).update(request, *args, **kwargs)
+        old_content = comment.content 
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 200 and old_content != comment.content:
+            comment.add_to_edit_history(old_content)
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+        comment = self.get_object()
+        if request.user != comment.user and not request.user.is_superuser:
+            raise PermissionDenied("You do not have permission to delete this comment.")
+        return super().destroy(request, *args, **kwargs)
 
 
 class VoteViewSet(viewsets.ViewSet):
